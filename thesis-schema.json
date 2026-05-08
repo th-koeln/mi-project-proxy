@@ -25,7 +25,7 @@
 
     "type": {
       "type": "string",
-      "enum": ["Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
+      "enum": ["Guided Projct", "Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
       "description": "Art der Arbeit"
     },
 
