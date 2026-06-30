@@ -13,7 +13,10 @@
     "first_supervisor",
     "second_supervisor",
     "status",
-    "visibility"
+    "visibility",
+    "teaser_image_url",
+    "teaser_image_copyright"
+
   ],
   "properties": {
 
@@ -25,7 +28,7 @@
 
     "type": {
       "type": "string",
-      "enum": ["Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
+      "enum": ["Guided Projct", "Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
       "description": "Art der Arbeit"
     },
 
@@ -137,11 +140,6 @@
       "type": "boolean",
       "default": false,
       "description": "Gibt an, ob ein Forschungstagebuch geführt wurde"
-    },
-
-    "related_folder": {
-      "type": "string",
-      "description": "Verknüpfter Ordner, z. B. der zugehörige Proposal-Eintrag"
     },
 
     "personal_website_url": {
