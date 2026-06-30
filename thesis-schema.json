@@ -169,6 +169,16 @@
       "type": "string",
       "format": "uri",
       "description": "Website des Kooperationspartners"
+    },
+
+    "awards": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "Auszeichnungen oder Awards, die für die Arbeit vergeben wurden"
     }
 
   },
