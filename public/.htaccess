@@ -1,16 +1,6 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    RewriteCond %{HTTP:Origin} ^https?://%{HTTP_HOST}$ [NC,OR]
-    RewriteCond %{HTTP:Origin} ^https?://localhost(:[0-9]+)?$ [NC,OR]
-    RewriteCond %{HTTP:Origin} ^https?://127\.0\.0\.1(:[0-9]+)?$ [NC]
-    RewriteRule ^ - [E=ALLOW_CORS:1]
-</IfModule>
-
 <IfModule mod_headers.c>
-    Header always set Vary "Origin"
-    Header always set Access-Control-Allow-Origin "%{HTTP_ORIGIN}e" env=ALLOW_CORS
-    Header always set Access-Control-Allow-Methods "GET, OPTIONS" env=ALLOW_CORS
-    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With" env=ALLOW_CORS
-    Header always set Access-Control-Max-Age "600" env=ALLOW_CORS
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Max-Age "600"
 </IfModule>
