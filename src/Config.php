@@ -6,7 +6,7 @@ namespace Mi\ProjectProxy;
 
 final class Config
 {
-    /** @return array{sources: array<string, array{url: string, mapper: class-string}>} */
+    /** @return array{sources: array<string, array{url: string, mapper: class-string, detail?: 'auto'|'internal'|'external'}>} */
     public static function loadSourcesConfig(): array
     {
         $configFile = __DIR__ . '/../config/sources.php';

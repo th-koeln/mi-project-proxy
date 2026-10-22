@@ -23,6 +23,22 @@ Jede Source hat:
 
 - `url`: JSON-Endpoint
 - `mapper`: Mapper-Klasse
+- `detail` (optional, Standard `auto`): wo die Detailseite eines Projekts gerendert wird
+  - `auto`: Liefert der Mapper eine Detailseiten-URL, wird extern verlinkt, sonst intern gerendert
+  - `internal`: immer auf dem Medieninformatik-Server rendern
+  - `external`: immer auf die Quelle verlinken (fehlt die URL, wird intern gerendert)
+
+### Detailseiten im Frontend
+
+Jedes Projekt enthält ein aufgelöstes `detail`-Objekt. `auto` taucht dort nie auf, `mode` ist immer `internal` oder `external`:
+
+```json
+"detail": { "mode": "external", "url": "https://cnoss.github.io/thesis/…" }
+"detail": { "mode": "internal", "url": null }
+```
+
+- `external`: auf `detail.url` verlinken (Detailseite liegt auf dem Source-Server)
+- `internal`: eigene Detailseite rendern, identifiziert über `source` + `id`
 
 ## Mapper schreiben
 
@@ -36,6 +52,7 @@ Empfohlenes Normalformat pro Projekt:
 - `name` (string)
 - `type` (string|null)
 - `url` (string|null)
+- `detailUrl` (string|null): URL einer HTML-Detailseite auf dem Source-Server (keine PDF o. Ä.); wird vom Proxy in `detail` überführt
 - `updatedAt` (string|null)
 - `source` (string)
 - optional `raw` (mixed/array)

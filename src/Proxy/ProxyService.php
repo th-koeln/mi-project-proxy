@@ -11,7 +11,9 @@ use Mi\ProjectProxy\Mapper\MapperInterface;
 
 final class ProxyService
 {
-    /** @param array<string, array{url: string, mapper: class-string}> $sources */
+    private const DETAIL_MODES = ['auto', 'internal', 'external'];
+
+    /** @param array<string, array{url: string, mapper: class-string, detail?: string}> $sources */
     public function __construct(
         private readonly array $sources,
         private readonly HttpClient $httpClient,
@@ -53,11 +55,12 @@ final class ProxyService
                     continue;
                 }
 
+                $detailMode = $this->detailMode($sourceName, $source['detail'] ?? null);
                 $mapper = $this->createMapper($sourceName, $source['mapper'] ?? null);
                 $mapped = $mapper->map($payload);
 
                 foreach ($mapped as $p) {
-                    $projects[] = $p;
+                    $projects[] = $this->withDetail($p, $detailMode);
                 }
             } catch (\Throwable $e) {
                 $errors[] = [
@@ -113,6 +116,51 @@ final class ProxyService
         }
 
         return $selected;
+    }
+
+    private function detailMode(string $sourceName, mixed $configured): string
+    {
+        $mode = $configured === null ? 'auto' : strtolower(trim((string) $configured));
+        if (!in_array($mode, self::DETAIL_MODES, true)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid detail mode "%s" for source "%s" (expected: %s)',
+                (string) $configured,
+                $sourceName,
+                implode(', ', self::DETAIL_MODES),
+            ));
+        }
+
+        return $mode;
+    }
+
+    /**
+     * Löst den Detail-Modus pro Projekt auf. `auto` erscheint nie in der
+     * Ausgabe: mit Detailseiten-URL wird verlinkt, sonst intern gerendert.
+     *
+     * @param array<string, mixed> $project
+     * @return array<string, mixed>
+     */
+    private function withDetail(array $project, string $mode): array
+    {
+        $detailUrl = $project['detailUrl'] ?? null;
+        $detailUrl = is_string($detailUrl) && trim($detailUrl) !== '' ? trim($detailUrl) : null;
+        unset($project['detailUrl']);
+
+        if ($mode === 'auto') {
+            $mode = $detailUrl !== null ? 'external' : 'internal';
+        }
+
+        // external ohne Ziel wäre ein toter Link → intern rendern.
+        if ($mode === 'external' && $detailUrl === null) {
+            $mode = 'internal';
+        }
+
+        $project['detail'] = [
+            'mode' => $mode,
+            'url' => $detailUrl,
+        ];
+
+        return $project;
     }
 
     private function createMapper(string $sourceName, ?string $mapperClass): MapperInterface

@@ -35,6 +35,7 @@ final class GitLabProjectsMapper implements MapperInterface
                 'name' => (string) $name,
                 'type' => 'gitlab',
                 'url' => $item['web_url'] ?? null,
+                'detailUrl' => $item['web_url'] ?? null,
                 'updatedAt' => $item['last_activity_at'] ?? $item['updated_at'] ?? null,
                 'source' => $this->sourceName,
                 'raw' => $item,

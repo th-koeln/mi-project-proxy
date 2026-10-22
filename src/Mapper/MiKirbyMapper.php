@@ -19,6 +19,10 @@ namespace Mi\ProjectProxy\Mapper;
  *
  * Standardmäßig werden nur veröffentlichte Einträge
  * (visibility === "published") ausgegeben.
+ *
+ * Kirby liefert keine Detailseiten-URL; `detailUrl` wird nur aus einem
+ * optionalen `detail_url` befüllt. Mit `detail => auto` wird daher intern
+ * gerendert.
  */
 final class MiKirbyMapper implements MapperInterface
 {
@@ -73,6 +77,8 @@ final class MiKirbyMapper implements MapperInterface
                 'name' => $title,
                 'type' => $this->normalizeString($item['type'] ?? null) ?? 'thesis',
                 'url' => $projectUrl ?? $thesisUrl,
+                // Nur echte HTML-Detailseiten, nie PDF oder Projekt-Demo.
+                'detailUrl' => $this->toAbsoluteUrl($this->normalizeString($item['detail_url'] ?? null)),
                 'image' => $this->toAbsoluteUrl($this->normalizeString($item['teaser_image_url'] ?? null)),
                 'imageCopyright' => $this->normalizeString($item['teaser_image_copyright'] ?? null),
                 'updatedAt' => $this->toIsoDateTime($date),

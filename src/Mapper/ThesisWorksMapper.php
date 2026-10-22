@@ -50,6 +50,7 @@ final class ThesisWorksMapper implements MapperInterface
                     ? trim((string) $item['type'])
                     : 'thesis',
                 'url' => $absoluteUrl,
+                'detailUrl' => $absoluteUrl,
                 'image' => $this->toAbsoluteUrl($image),
                 'updatedAt' => $this->toIsoDateTime($date),
                 'source' => $this->sourceName,
