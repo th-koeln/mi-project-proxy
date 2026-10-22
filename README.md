@@ -2,6 +2,45 @@
 
 Schlanker PHP-Proxy-Endpunkt, der mehrere heterogene JSON-Quellen (z. B. GitLab APIs, Legacy-Systeme) abfragt, deren Daten über austauschbare Mapper-Klassen in ein einheitliches Normalformat transformiert und als konsolidiertes JSON ausliefert. Über Query-Parameter lässt sich die Ausgabe nach Quellen, Typ und Umfang filtern.
 
+## Wie kommen die Projekte auf die Medieninformatik-Website?
+
+Die Projekte liegen nicht auf der Website selbst, sondern in verschiedenen Quellen, etwa im Kirby der Medieninformatik oder auf cnoss.github.io. Jede Quelle liefert ihre Daten in einem eigenen Format. Der Proxy sammelt alles ein und macht daraus **eine** einheitliche Liste, die die Website direkt anzeigen kann.
+
+```mermaid
+flowchart LR
+    subgraph Quellen
+        K["Kirby<br/>medieninformatik.th-koeln.de/kirby/abschlussarbeiten"]
+        T["Thesis Works<br/>cnoss.github.io/thesis/works.json"]
+    end
+
+    subgraph Proxy["mi-project-proxy"]
+        F["1. Abrufen<br/>JSON jeder Quelle laden"]
+        M["2. Übersetzen<br/>Mapper bringt alles ins Normalformat"]
+        D["3. Detail festlegen<br/>internal oder external"]
+        F --> M --> D
+    end
+
+    K --> F
+    T --> F
+
+    D -- "eine einheitliche JSON-Liste" --> W["Medieninformatik-Website<br/>zeigt die Projektübersicht"]
+
+    W -- "Klick auf ein Projekt" --> Q{"detail.mode?"}
+    Q -- external --> E["Weiterleitung zur Detailseite<br/>auf der Quelle (detail.url)"]
+    Q -- internal --> I["Detailseite wird auf der<br/>Medieninformatik-Website gerendert"]
+```
+
+In Worten:
+
+1. **Abrufen:** Die Website fragt den Proxy. Der Proxy lädt das JSON aller Quellen aus [config/sources.php](config/sources.php).
+2. **Übersetzen:** Für jede Quelle gibt es einen Mapper, der deren Felder auf das gemeinsame Format abbildet. Aus `firstname` + `lastname` (Kirby) wird z. B. `author`, genau wie bei Thesis Works.
+3. **Detail festlegen:** Der Proxy entscheidet pro Projekt, wo die Detailseite liegt, und schreibt das Ergebnis in `detail.mode`.
+4. **Anzeigen:** Die Website zeigt die Liste als Übersicht. Beim Klick auf ein Projekt reicht ein Blick auf `detail.mode`:
+   - `external`: Die Quelle hat eine eigene Detailseite, die Website verlinkt dorthin.
+   - `internal`: Die Quelle hat keine eigene Detailseite (z. B. Kirby), also rendert die Website sie selbst aus den Projektdaten.
+
+Eine neue Quelle anbinden heißt also nur: Eintrag in [config/sources.php](config/sources.php) und, falls das Format neu ist, ein passender Mapper (siehe unten).
+
 ## Start (lokal)
 
 ```bash
