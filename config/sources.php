@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Mi\ProjectProxy\Mapper\GenericProjectsMapper;
 use Mi\ProjectProxy\Mapper\GitLabProjectsMapper;
+use Mi\ProjectProxy\Mapper\MiKirbyMapper;
 use Mi\ProjectProxy\Mapper\ThesisWorksMapper;
 
 /**
@@ -17,6 +18,10 @@ return [
         'thesis-works' => [
             'url' => 'https://cnoss.github.io/thesis/works.json',
             'mapper' => ThesisWorksMapper::class,
+        ],
+        'mi-kirby' => [
+            'url' => 'https://www.medieninformatik.th-koeln.de/kirby/abschlussarbeiten',
+            'mapper' => MiKirbyMapper::class,
         ],
 
         // Beispiel 1: GitLab API (typisch root = Liste)
