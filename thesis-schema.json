@@ -11,7 +11,6 @@
     "firstname",
     "lastname",
     "first_supervisor",
-    "second_supervisor",
     "status",
     "visibility",
     "teaser_image_url",
@@ -28,7 +27,7 @@
 
     "type": {
       "type": "string",
-      "enum": ["Guided Projct", "Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
+      "enum": ["Guided Project", "Praxisprojekt", "Bachelorarbeit", "Masterarbeit"],
       "description": "Art der Arbeit"
     },
 
@@ -72,7 +71,7 @@
     "second_supervisor": {
       "type": "string",
       "minLength": 1,
-      "description": "Name der Zweitprüferin / des Zweitprüfers"
+      "description": "Name der Zweitprüferin / des Zweitprüfers (Pflicht bei Bachelor- und Masterarbeiten, sonst optional)"
     },
 
 
@@ -184,6 +183,18 @@
     "teaser_image_copyright": ["teaser_image_url"],
     "cooperation_partner_url": ["cooperation_partner"]
   },
+  "allOf": [
+    {
+      "description": "Abschlussarbeiten brauchen eine Zweitprüferin / einen Zweitprüfer",
+      "if": {
+        "properties": { "type": { "enum": ["Bachelorarbeit", "Masterarbeit"] } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["second_supervisor"]
+      }
+    }
+  ],
   "additionalProperties": false,
   "examples": [
     {
@@ -196,6 +207,8 @@
       "lastname": "Häring",
       "first_supervisor": "Prof. Benno Stein",
       "second_supervisor": "Dr. Harald Nitz",
+      "teaser_image_url": "teaser_lennard_haering.jpg",
+      "teaser_image_copyright": "Lennard Häring",
       "abstract": "Diese Arbeit entwickelt einen Digitalen Zwilling für Vertical-Farming-Anlagen, der Sensordaten mittels Augmented Reality visualisiert.",
       "keywords": ["Augmented Reality", "Smart Farming", "Vertical Farming", "IoT", "Digital Twin"]
     },
@@ -209,6 +222,8 @@
       "lastname": "Brock",
       "first_supervisor": "Prof. Dr. Theresa Schmiedel",
       "second_supervisor": "Dr. Harald Nitz",
+      "teaser_image_url": "teaser_sebastian_brock.jpg",
+      "teaser_image_copyright": "Sebastian Brock",
       "thesis_url": "thesis_sebastian_brock.pdf",
       "keywords": ["Web Audio API", "Real-time Collaboration", "Modular Synthesis", "WebRTC", "Music Technology"],
       "cooperation_partner": "Ableton AG",
