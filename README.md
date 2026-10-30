@@ -4,12 +4,22 @@ Schlanker PHP-Proxy-Endpunkt, der mehrere heterogene JSON-Quellen (z. B. GitLab 
 
 ## Wie kommen die Projekte auf die Medieninformatik-Website?
 
-Die Projekte liegen nicht auf der Website selbst, sondern in verschiedenen Quellen. Es gibt zwei Arten:
+Die Projekte liegen nicht auf der Website selbst, sondern in verschiedenen Quellen. Es gibt drei Arten:
 
 - **Zentrale Quelle:** das Kirby der Medieninformatik. Dort werden Arbeiten direkt gepflegt.
 - **Private Quellen:** Viele Lehrende veröffentlichen die Arbeiten aus ihrer Betreuung schon auf der eigenen Website. Jede solche Seite kann eine Quelle sein, wenn sie die Daten als JSON anbietet. *Thesis Works* (cnoss.github.io) ist ein Beispiel dafür.
+- **Modul- und Projekt-Repos:** GitHub-Repos der TH Köln, die Arbeiten als JSON-Feed bereitstellen.
 
-Jede Quelle liefert ihre Daten in einem eigenen Format. Der Proxy sammelt alles ein und macht daraus **eine** einheitliche Liste, die die Website direkt anzeigen kann.
+Aktuell sind diese Quellen eingetragen:
+
+| Source | Quelle | Adapter | Detailseite | Wer entscheidet, was erscheint? |
+|---|---|---|---|---|
+| `mi-kirby` | Kirby der Medieninformatik | `ThesisSchemaMapper` | `internal` | `visibility` im Kirby |
+| `thesis-works` | cnoss.github.io/thesis | `ThesisWorksMapper` | `external` | Inhalt der Quelle |
+| `agentic-feeding` | th-koeln/mi-project-agentic-feeding | `ThesisSchemaMapper` | `internal` | `visibility` im Feed |
+| `praxisprojektseminar` | th-koeln/mi-bachelor-praxisprojektseminar | `ThesisSchemaMapper` | `external` | `mi-website: true` im Front Matter des Projekts (siehe README des Repos) |
+
+Die Quellen liefern ihre Daten teils in unterschiedlichen Formaten. Der Proxy sammelt alles ein und macht daraus **eine** einheitliche Liste, die die Website direkt anzeigen kann.
 
 ```mermaid
 flowchart LR
@@ -17,6 +27,7 @@ flowchart LR
         K["Zentral: Kirby der Medieninformatik<br/>medieninformatik.th-koeln.de/kirby/abschlussarbeiten"]
         T["Privat: Website einer/eines Lehrenden<br/>z. B. Thesis Works (cnoss.github.io)"]
         P["Privat: weitere Lehrende …"]
+        R["Repos: agentic-feeding,<br/>Praxisprojektseminar"]
     end
 
     subgraph Proxy["mi-project-proxy"]
@@ -29,6 +40,7 @@ flowchart LR
     K --> F
     T --> F
     P --> F
+    R --> F
 
     D -- "eine einheitliche JSON-Liste" --> W["Medieninformatik-Website<br/>zeigt die Projektübersicht"]
 
@@ -43,13 +55,13 @@ In Worten:
 2. **Übersetzen:** Für jede Quelle gibt es einen Adapter (im Code: Mapper), der deren Felder auf das gemeinsame Format abbildet. Aus `firstname` + `lastname` (Kirby) wird z. B. `author`, genau wie bei Thesis Works. Eine Quelle muss also nicht das „richtige" Schema liefern. Weicht ihr Format ab, schreibt man einfach einen passenden Adapter dazu.
 3. **Detail festlegen:** Der Proxy entscheidet pro Projekt, wo die Detailseite liegt, und schreibt das Ergebnis in `detail.mode`.
 4. **Anzeigen:** Die Website zeigt die Liste als Übersicht. Beim Klick auf ein Projekt reicht ein Blick auf `detail.mode`:
-   - `external`: Die Quelle hat eine eigene Detailseite (typisch für private Quellen), die Website verlinkt dorthin.
+   - `external`: Die Quelle hat eine eigene Detailseite (z. B. Thesis Works oder das Praxisprojektseminar), die Website verlinkt dorthin.
    - `internal`: Die Quelle hat keine eigene Detailseite (z. B. Kirby), also rendert die Website sie selbst aus den Projektdaten.
 
 Eine neue Quelle anbinden, z. B. die Website einer weiteren Lehrperson, heißt also nur:
 
 1. Eintrag in [config/sources.php](config/sources.php) (URL des JSON und Adapter).
-2. Liefert die Quelle das Schema aus [thesis-schema.json](thesis-schema.json), passt der vorhandene `ThesisSchemaMapper`. Sonst schreibt man einen neuen Adapter (siehe [Mapper schreiben](#mapper-schreiben)).
+2. Liefert die Quelle das Schema aus [thesis-schema.json](thesis-schema.json), passt der vorhandene `ThesisSchemaMapper`. Hat sie eigene Detailseiten, gibt sie deren Adresse im optionalen Feld `detail_url` an. Sonst schreibt man einen neuen Adapter (siehe [Mapper schreiben](#mapper-schreiben)).
 
 Der Proxy gleicht die Quellen nicht miteinander ab. Steht dieselbe Arbeit in zwei Quellen, wird das redaktionell in den Quellen bereinigt.
 
@@ -65,6 +77,8 @@ Dann:
 - `http://localhost:8080/index.php?sources=gitlab-main,legacy-system&limit=25`
 - `http://localhost:8080/index.php?type=gitlab&limit=50`
 - `http://localhost:8080/index.php?raw=1` (inkl. `raw` Feld pro Projekt)
+
+Ohne `limit` liefert der Proxy höchstens 50 Projekte, das Maximum ist 500. Die Projekte kommen in der Reihenfolge der Sources und werden nicht sortiert. Wer alles braucht, muss `limit` also passend setzen.
 
 ## Sources konfigurieren
 

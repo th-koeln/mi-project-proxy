@@ -123,6 +123,12 @@
       "description": "Relativer Pfad oder URL zum Profilfoto der Autorin / des Autors"
     },
 
+    "detail_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Absolute URL einer HTML-Detailseite auf dem Server der Quelle (keine PDF, kein Repository)"
+    },
+
     "repository_url": {
       "type": "string",
       "format": "uri",
