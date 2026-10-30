@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Mi\ProjectProxy\Mapper\GenericProjectsMapper;
 use Mi\ProjectProxy\Mapper\GitLabProjectsMapper;
-use Mi\ProjectProxy\Mapper\MiKirbyMapper;
+use Mi\ProjectProxy\Mapper\ThesisSchemaMapper;
 use Mi\ProjectProxy\Mapper\ThesisWorksMapper;
 
 /**
@@ -16,6 +16,7 @@ use Mi\ProjectProxy\Mapper\ThesisWorksMapper;
  *     auto     → mit Detailseiten-URL extern verlinken, sonst intern rendern
  *     internal → immer auf dem MI-Server rendern
  *     external → immer auf die Quelle verlinken (ohne URL: intern)
+ * - baseUrl: Basis für relative Pfade in den Daten (optional, nur ThesisSchemaMapper)
  */
 return [
     'sources' => [
@@ -26,7 +27,13 @@ return [
         ],
         'mi-kirby' => [
             'url' => 'https://www.medieninformatik.th-koeln.de/kirby/abschlussarbeiten',
-            'mapper' => MiKirbyMapper::class,
+            'mapper' => ThesisSchemaMapper::class,
+            'detail' => 'auto',
+            'baseUrl' => 'https://www.medieninformatik.th-koeln.de',
+        ],
+        'agentic-feeding' => [
+            'url' => 'https://th-koeln.github.io/mi-project-agentic-feeding/index.json',
+            'mapper' => ThesisSchemaMapper::class,
             'detail' => 'auto',
         ],
 

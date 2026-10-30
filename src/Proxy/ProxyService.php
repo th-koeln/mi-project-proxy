@@ -13,7 +13,7 @@ final class ProxyService
 {
     private const DETAIL_MODES = ['auto', 'internal', 'external'];
 
-    /** @param array<string, array{url: string, mapper: class-string, detail?: string}> $sources */
+    /** @param array<string, array{url: string, mapper: class-string, detail?: string, baseUrl?: string}> $sources */
     public function __construct(
         private readonly array $sources,
         private readonly HttpClient $httpClient,
@@ -56,7 +56,7 @@ final class ProxyService
                 }
 
                 $detailMode = $this->detailMode($sourceName, $source['detail'] ?? null);
-                $mapper = $this->createMapper($sourceName, $source['mapper'] ?? null);
+                $mapper = $this->createMapper($sourceName, $source);
                 $mapped = $mapper->map($payload);
 
                 foreach ($mapped as $p) {
@@ -163,13 +163,15 @@ final class ProxyService
         return $project;
     }
 
-    private function createMapper(string $sourceName, ?string $mapperClass): MapperInterface
+    /** @param array{mapper?: class-string, baseUrl?: string} $source */
+    private function createMapper(string $sourceName, array $source): MapperInterface
     {
+        $mapperClass = $source['mapper'] ?? null;
         if ($mapperClass === null || !class_exists($mapperClass)) {
             return new GenericProjectsMapper($sourceName);
         }
 
-        // Mapper-Klassen bekommen den Source-Namen im Konstruktor.
-        return new $mapperClass($sourceName);
+        // Mapper-Klassen bekommen den Source-Namen und die optionale baseUrl im Konstruktor.
+        return new $mapperClass($sourceName, $source['baseUrl'] ?? null);
     }
 }

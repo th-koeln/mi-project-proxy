@@ -49,7 +49,9 @@ In Worten:
 Eine neue Quelle anbinden, z. B. die Website einer weiteren Lehrperson, heißt also nur:
 
 1. Eintrag in [config/sources.php](config/sources.php) (URL des JSON und Adapter).
-2. Liefert die Quelle schon das Format einer bestehenden Quelle, wird deren Adapter wiederverwendet. Sonst schreibt man einen neuen (siehe [Mapper schreiben](#mapper-schreiben)).
+2. Liefert die Quelle das Schema aus [thesis-schema.json](thesis-schema.json), passt der vorhandene `ThesisSchemaMapper`. Sonst schreibt man einen neuen Adapter (siehe [Mapper schreiben](#mapper-schreiben)).
+
+Der Proxy gleicht die Quellen nicht miteinander ab. Steht dieselbe Arbeit in zwei Quellen, wird das redaktionell in den Quellen bereinigt.
 
 ## Start (lokal)
 
@@ -72,6 +74,7 @@ Jede Source hat:
 
 - `url`: JSON-Endpoint
 - `mapper`: Mapper-Klasse
+- `baseUrl` (optional, nur `ThesisSchemaMapper`): Basis für relative Pfade zu Bildern und PDFs. Ohne `baseUrl` bleiben relative Pfade leer.
 - `detail` (optional, Standard `auto`): wo die Detailseite eines Projekts gerendert wird
   - `auto`: Liefert der Mapper eine Detailseiten-URL, wird extern verlinkt, sonst intern gerendert
   - `internal`: immer auf dem Medieninformatik-Server rendern

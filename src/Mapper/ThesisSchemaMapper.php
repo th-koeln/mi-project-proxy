@@ -5,31 +5,30 @@ declare(strict_types=1);
 namespace Mi\ProjectProxy\Mapper;
 
 /**
- * Mapper für die MI-Kirby-Quelle
- * (https://www.medieninformatik.th-koeln.de/kirby/abschlussarbeiten).
- *
- * Die Quelle liefert bereits das native Abschlussarbeiten-Schema
- * (siehe thesis-schema.json): ein Array von Objekten mit u. a.
- * firstname/lastname (getrennt), first_supervisor, teaser_image_url,
- * keywords (Array) und visibility.
+ * Adapter für alle Quellen, die das native Abschlussarbeiten-Schema liefern
+ * (siehe thesis-schema.json), z. B. das MI-Kirby oder agentic-feeding:
+ * Objekte mit u. a. firstname/lastname (getrennt), first_supervisor,
+ * teaser_image_url, keywords (Array) und visibility.
  *
  * Der Mapper überführt das in dasselbe Normalformat wie der
  * ThesisWorksMapper, damit gemischte Feeds konsistente Felder haben,
- * und ergänzt die reicheren Kirby-Felder (abstract, repository_url, …).
+ * und ergänzt die reicheren Schema-Felder (abstract, repository_url, …).
  *
  * Standardmäßig werden nur veröffentlichte Einträge
  * (visibility === "published") ausgegeben.
  *
- * Kirby liefert keine Detailseiten-URL; `detailUrl` wird nur aus einem
- * optionalen `detail_url` befüllt. Mit `detail => auto` wird daher intern
- * gerendert.
+ * Relative Pfade werden gegen die `baseUrl` der Source aufgelöst. Ohne
+ * `baseUrl` bleiben sie leer, damit kein Link auf den falschen Server zeigt.
+ *
+ * `detailUrl` wird nur aus einem optionalen `detail_url` befüllt. Ohne dieses
+ * Feld wird mit `detail => auto` intern gerendert.
  */
-final class MiKirbyMapper implements MapperInterface
+final class ThesisSchemaMapper implements MapperInterface
 {
-    private const BASE_URL = 'https://www.medieninformatik.th-koeln.de';
-
-    public function __construct(private readonly string $sourceName)
-    {
+    public function __construct(
+        private readonly string $sourceName,
+        private readonly ?string $baseUrl = null,
+    ) {
     }
 
     public function map(mixed $payload): array
@@ -38,9 +37,11 @@ final class MiKirbyMapper implements MapperInterface
             return [];
         }
 
-        // Toleriere sowohl [...] als auch {"projects": [...]} / {"data": [...]}.
+        // Toleriere sowohl [...] als auch {"works": [...]} / {"projects": [...]} / {"data": [...]}.
         $items = $payload;
-        if (isset($payload['projects']) && is_array($payload['projects'])) {
+        if (isset($payload['works']) && is_array($payload['works'])) {
+            $items = $payload['works'];
+        } elseif (isset($payload['projects']) && is_array($payload['projects'])) {
             $items = $payload['projects'];
         } elseif (isset($payload['data']) && is_array($payload['data'])) {
             $items = $payload['data'];
@@ -81,7 +82,7 @@ final class MiKirbyMapper implements MapperInterface
                 'detailUrl' => $this->toAbsoluteUrl($this->normalizeString($item['detail_url'] ?? null)),
                 'image' => $this->toAbsoluteUrl($this->normalizeString($item['teaser_image_url'] ?? null)),
                 'imageCopyright' => $this->normalizeString($item['teaser_image_copyright'] ?? null),
-                'updatedAt' => $this->toIsoDateTime($date),
+                'updatedAt' => $this->toIsoDateTime($this->normalizeString($item['updated_at'] ?? null) ?? $date),
                 'source' => $this->sourceName,
                 'author' => $author,
                 'firstname' => $this->normalizeString($item['firstname'] ?? null),
@@ -159,11 +160,11 @@ final class MiKirbyMapper implements MapperInterface
             return $url;
         }
 
-        if ($url[0] === '/') {
-            return self::BASE_URL . $url;
+        if ($this->baseUrl === null) {
+            return null;
         }
 
-        return self::BASE_URL . '/' . $url;
+        return rtrim($this->baseUrl, '/') . '/' . ltrim($url, '/');
     }
 
     private function toIsoDate(?string $date): ?string
