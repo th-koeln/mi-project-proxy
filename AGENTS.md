@@ -8,7 +8,7 @@ Architektur, Parameter und aktuelle Quellen: [README.md](README.md). Text für L
 
 **Die Quelle bleibt, wie sie ist.** Weicht ein Format ab, übersetzt ein Adapter (im Code: Mapper). Quellen liefern nur einen öffentlich erreichbaren JSON-Link, Lehrende sollen dafür nichts umbauen. `ThesisSchemaMapper` deckt alles ab, was ungefähr [thesis-schema.json](thesis-schema.json) entspricht; neue Mapper nur für wirklich andere Formate.
 
-**Kuratiert wird in der Quelle.** Was erscheint, entscheidet die Redaktion dort: `visibility` im Kirby, `mi-website: true` im Praxisprojektseminar. Auch Dubletten werden dort bereinigt, der Proxy bleibt frei von Abgleichslogik. Ein Abgleich über das Datum würde ohnehin scheitern, weil Quellen für dieselbe Arbeit verschiedene Daten führen (z. B. Vortragstermin und Abgabe).
+**Kuratiert wird in der Quelle.** Was erscheint, entscheidet die Redaktion dort: `visibility` im Kirby, Validierung und Bestätigung beim Einpflegen in mi-project-agentic-feeding (eigene AGENTS.md im Repo), `mi-website: true` plus Bild und Bildrechte im Praxisprojektseminar. Auch Dubletten werden dort bereinigt, der Proxy bleibt frei von Abgleichslogik. Ein Abgleich über das Datum würde ohnehin scheitern, weil Quellen für dieselbe Arbeit verschiedene Daten führen (z. B. Vortragstermin und Abgabe).
 
 **Rechte vor Vollständigkeit.** Praxisprojekte ohne Rechteangabe zum Bild, ohne nutzbares Bild oder ohne Namen werden gar nicht gezeigt, auch nicht ohne Bild. Das ist eine Entscheidung der Projektleitung, das Seminar-Template setzt sie um.
 
@@ -28,6 +28,7 @@ Architektur, Parameter und aktuelle Quellen: [README.md](README.md). Text für L
 
 ## Fallstricke
 
+- **Cache:** Quellen werden 30 Minuten in `var/cache/` gehalten. Beim Prüfen einer Änderung an einer Quelle zuerst `var/cache/` leeren, sonst testest du den alten Stand. Fällt eine Quelle aus, liefert der Proxy ihren letzten Stand mit `"stale": true` in `errors`.
 - **Stille Leere:** Kennt `ThesisSchemaMapper` die Hülle nicht (bekannt: `works`, `projects`, `data`), liefert er 0 Projekte ohne Fehler. Deshalb `count` prüfen.
 - **Keine Validierung zur Laufzeit:** Mapper prüfen das Schema nicht. Feeds gegen `thesis-schema.json` mit einem Validator für Draft 2020-12 prüfen.
 - **Limit:** Ohne Parameter kommen höchstens 50 Projekte (Maximum 500), unsortiert und abgeschnitten nach dem Zusammenführen. Spätere Sources fallen also zuerst weg.

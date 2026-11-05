@@ -17,8 +17,15 @@ use Mi\ProjectProxy\Mapper\ThesisWorksMapper;
  *     internal → immer auf dem MI-Server rendern
  *     external → immer auf die Quelle verlinken (ohne URL: intern)
  * - baseUrl: Basis für relative Pfade in den Daten (optional, nur ThesisSchemaMapper)
+ *
+ * cache.ttl: wie lange (Sekunden) die Antwort einer Quelle zwischengespeichert wird.
+ * 0 schaltet den Cache ab. Gespeichert wird in var/cache/.
  */
 return [
+    'cache' => [
+        'ttl' => 1800,
+    ],
+
     'sources' => [
         'thesis-works' => [
             'url' => 'https://cnoss.github.io/thesis/works.json',

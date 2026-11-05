@@ -16,8 +16,8 @@ Aktuell sind diese Quellen eingetragen:
 |---|---|---|---|---|
 | `mi-kirby` | Kirby der Medieninformatik | `ThesisSchemaMapper` | `internal` | `visibility` im Kirby |
 | `thesis-works` | cnoss.github.io/thesis | `ThesisWorksMapper` | `external` | Inhalt der Quelle |
-| `agentic-feeding` | th-koeln/mi-project-agentic-feeding | `ThesisSchemaMapper` | `internal` | `visibility` im Feed |
-| `praxisprojektseminar` | th-koeln/mi-bachelor-praxisprojektseminar | `ThesisSchemaMapper` | `external` | `mi-website: true` im Front Matter des Projekts (siehe README des Repos) |
+| `agentic-feeding` | th-koeln/mi-project-agentic-feeding: Lehrende pflegen Arbeiten mit ihrem KI-Agenten ein, die CI validiert und baut `index.json` | `ThesisSchemaMapper` | `internal` | `visibility: published` und grüne Validierung im Repo |
+| `praxisprojektseminar` | th-koeln/mi-bachelor-praxisprojektseminar | `ThesisSchemaMapper` | `external` | `mi-website: true` im Front Matter, dazu Teaserbild, Bildrechte und Name (siehe README des Repos) |
 
 Die Quellen liefern ihre Daten teils in unterschiedlichen Formaten. Der Proxy sammelt alles ein und macht daraus **eine** einheitliche Liste, die die Website direkt anzeigen kann.
 
@@ -77,6 +77,14 @@ Dann:
 - `http://localhost:8080/index.php?sources=gitlab-main,legacy-system&limit=25`
 - `http://localhost:8080/index.php?type=gitlab&limit=50`
 - `http://localhost:8080/index.php?raw=1` (inkl. `raw` Feld pro Projekt)
+
+### Cache
+
+Die Antwort jeder Quelle wird 30 Minuten zwischengespeichert (`cache.ttl` in [config/sources.php](config/sources.php), `0` schaltet den Cache ab). Gespeichert wird nur eine erfolgreiche Antwort mit gültigem JSON, und zwar in `var/cache/`. Das Verzeichnis muss für den Webserver beschreibbar sein, sonst läuft der Proxy ohne Cache weiter.
+
+Ist eine Quelle nicht erreichbar oder liefert sie Unsinn, nutzt der Proxy den letzten gespeicherten Stand, egal wie alt. Er meldet das in `errors` mit `"stale": true`, und `meta.ok` ist dann `false`. Um Änderungen sofort zu sehen, die Dateien in `var/cache/` löschen.
+
+### Limit
 
 Ohne `limit` liefert der Proxy höchstens 50 Projekte, das Maximum ist 500. Die Projekte kommen in der Reihenfolge der Sources und werden nicht sortiert. Wer alles braucht, muss `limit` also passend setzen.
 
