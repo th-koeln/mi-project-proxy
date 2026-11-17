@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://th-koeln.de/mi/abschlussarbeiten/feed/v1",
+  "title": "Feed mit Abschlussarbeiten",
+  "description": "Rahmen einer JSON-Datei, die Arbeiten für den mi-project-proxy bereitstellt. Jedes Element in works ist eine Arbeit nach thesis-schema.json ($id https://th-koeln.de/mi/abschlussarbeiten/schema/v1).",
+  "type": "object",
+  "required": ["works"],
+  "properties": {
+
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Zeitpunkt, zu dem die Datei erzeugt wurde (ISO 8601)"
+    },
+
+    "schema": {
+      "type": "string",
+      "description": "Kennung des Schemas der Arbeiten, derzeit https://th-koeln.de/mi/abschlussarbeiten/schema/v1"
+    },
+
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Anzahl der Einträge in works"
+    },
+
+    "works": {
+      "type": "array",
+      "items": { "$ref": "https://th-koeln.de/mi/abschlussarbeiten/schema/v1" },
+      "description": "Die Arbeiten"
+    }
+
+  },
+  "examples": [
+    {
+      "generated": "2026-11-13T15:20:56Z",
+      "schema": "https://th-koeln.de/mi/abschlussarbeiten/schema/v1",
+      "count": 1,
+      "works": [
+        {
+          "id": "2026-11-02-akkus",
+          "title": "Überblick über Verfahren zur Darstellung von Wolken in Videospielen",
+          "type": "Bachelorarbeit",
+          "date": "2026-11-02",
+          "status": "finished",
+          "visibility": "published",
+          "firstname": "Tolga",
+          "lastname": "Akkus",
+          "first_supervisor": "Prof. Dr. Florian Niebling",
+          "second_supervisor": "M.Sc. Marco Uebachs",
+          "teaser_image_url": "https://www.framebuffer.net/studentprojects/2026-11-02-akkus-teaser.webp",
+          "teaser_image_copyright": "Tolga Akkus"
+        }
+      ]
+    }
+  ]
+}

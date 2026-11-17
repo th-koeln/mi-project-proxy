@@ -48,6 +48,11 @@ return [
             'mapper' => ThesisSchemaMapper::class,
             'detail' => 'auto',
         ],
+        'framebuffer-niebling' => [
+            'url' => 'https://www.framebuffer.net/studentprojects/vis.json',
+            'mapper' => ThesisSchemaMapper::class,
+            'detail' => 'auto',
+        ],
 
         // Beispiel 1: GitLab API (typisch root = Liste)
         // 'gitlab-main' => [

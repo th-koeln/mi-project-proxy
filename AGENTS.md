@@ -30,7 +30,7 @@ Architektur, Parameter und aktuelle Quellen: [README.md](README.md). Text für L
 
 - **Cache:** Quellen werden 30 Minuten in `var/cache/` gehalten. Beim Prüfen einer Änderung an einer Quelle zuerst `var/cache/` leeren, sonst testest du den alten Stand. Fällt eine Quelle aus, liefert der Proxy ihren letzten Stand mit `"stale": true` in `errors`.
 - **Stille Leere:** Kennt `ThesisSchemaMapper` die Hülle nicht (bekannt: `works`, `projects`, `data`), liefert er 0 Projekte ohne Fehler. Deshalb `count` prüfen.
-- **Keine Validierung zur Laufzeit:** Mapper prüfen das Schema nicht. Feeds gegen `thesis-schema.json` mit einem Validator für Draft 2020-12 prüfen.
+- **Keine Validierung zur Laufzeit:** Mapper prüfen das Schema nicht. Feeds gegen `feed-schema.json` mit einem Validator für Draft 2020-12 prüfen; `thesis-schema.json` muss dabei geladen sein, weil der Rahmen per `$ref` auf dessen `$id` verweist.
 - **Limit:** Ohne Parameter kommen höchstens 50 Projekte (Maximum 500), unsortiert und abgeschnitten nach dem Zusammenführen. Spätere Sources fallen also zuerst weg.
 - **IDs:** Kirby liefert keine `id`, der Mapper baut sie aus Name und Datum. Eine Korrektur daran ändert die Adresse interner Detailseiten. Für `internal` fehlt außerdem ein Abruf einzelner Projekte, das Frontend sucht in der Liste.
 - **`type`:** Die Werte sind nicht einheitlich (`Bachelorarbeit` im Schema, Fallback `thesis` bei Thesis Works).

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://th-koeln.de/mi/abschlussarbeiten/schema/v1",
   "title": "Abschlussarbeit",
   "description": "Schema für Abschlussarbeiten und Praxisprojekte im Medieninformatik-Studiengang der TH Köln (zusammengeführt aus mi-bachelor-abschlussarbeiten und cnoss/thesis)",

@@ -39,7 +39,7 @@ Wenn deine Arbeiten schon auf einer Website oder in einem Repo stehen, können w
 2. Wir tragen deine Quelle im Proxy ein.
 3. Deine Arbeiten erscheinen auf der MI-Website. Hast du eigene Detailseiten, verlinkt die Website dorthin.
 
-**Das Format muss nicht perfekt sein.** Am einfachsten ist es, wenn dein JSON ungefähr zu unserem [Schema](https://github.com/th-koeln/mi-project-proxy/blob/main/thesis-schema.json) passt. Weicht es ab, bauen wir im Proxy einen kleinen Adapter, der deine Felder übersetzt. Du musst deine Daten dafür nicht umbauen.
+**Das Format muss nicht perfekt sein.** Am einfachsten ist es, wenn dein JSON ungefähr zu unserem [Schema für die Datei](https://github.com/th-koeln/mi-project-proxy/blob/main/feed-schema.json) passt. Es beschreibt den Rahmen (`generated`, `schema`, `count`, `works`), jede einzelne Arbeit darin folgt dem [Schema für Arbeiten](https://github.com/th-koeln/mi-project-proxy/blob/main/thesis-schema.json). Wer selbst validieren will, lädt beide Schemas in den Validator. Weicht es ab, bauen wir im Proxy einen kleinen Adapter, der deine Felder übersetzt. Du musst deine Daten dafür nicht umbauen.
 
 ## Arbeiten mit dem eigenen KI-Agenten einpflegen
 
@@ -104,6 +104,7 @@ Die Detailseite bleibt auf der Seminar-Website, die MI-Website verlinkt dorthin.
 | [mi-project-agentic-feeding](https://github.com/th-koeln/mi-project-agentic-feeding) | mit KI-Agenten eingepflegte Arbeiten | MI-Website | geprüfte Einträge mit `visibility: published` |
 | [Praxisprojektseminar](https://github.com/th-koeln/mi-bachelor-praxisprojektseminar) | Praxisprojekte aus dem Seminar | Seminar-Website | nur mit `mi-website: true`, Bild und Bildrechten |
 | [Thesis Works](https://cnoss.github.io/thesis/) | Arbeiten aus der Betreuung einer Lehrperson | Thesis Works | alle Einträge der Quelle |
+| [framebuffer.net](https://www.framebuffer.net/studentprojects/vis.json) | Arbeiten aus der Betreuung von Florian Niebling | MI-Website | Einträge mit `visibility: published` |
 
 ## Doppelte Arbeiten
 
@@ -117,6 +118,7 @@ Der Proxy erkennt keine Dubletten. Steht eine Arbeit in zwei Quellen, muss sie i
 
 - [mi-project-proxy auf GitHub](https://github.com/th-koeln/mi-project-proxy): Funktionsweise, Konfiguration und Adapter (README)
 - [Schema für Arbeiten](https://github.com/th-koeln/mi-project-proxy/blob/main/thesis-schema.json): alle Felder und Pflichtangaben
+- [Schema für die Datei](https://github.com/th-koeln/mi-project-proxy/blob/main/feed-schema.json): Rahmen mit `generated`, `schema`, `count` und `works`
 - [README von mi-project-agentic-feeding](https://github.com/th-koeln/mi-project-agentic-feeding#readme): Arbeiten mit dem KI-Agenten einpflegen
 - [README des Praxisprojektseminars](https://github.com/th-koeln/mi-bachelor-praxisprojektseminar#readme): Freigabe von Praxisprojekten
 
@@ -137,10 +139,12 @@ Der Proxy erkennt keine Dubletten. Steht eine Arbeit in zwei Quellen, muss sie i
 | **Proxy und Schema** | |
 | Repo mi-project-proxy | https://github.com/th-koeln/mi-project-proxy |
 | Schema für Arbeiten | https://github.com/th-koeln/mi-project-proxy/blob/main/thesis-schema.json |
+| Schema für die Datei (Rahmen) | https://github.com/th-koeln/mi-project-proxy/blob/main/feed-schema.json |
 | **JSON-Feeds der Quellen** (zum Nachsehen, was gerade veröffentlicht ist) | |
 | Kirby | https://www.medieninformatik.th-koeln.de/kirby/abschlussarbeiten |
 | mi-project-agentic-feeding | https://th-koeln.github.io/mi-project-agentic-feeding/index.json |
 | Praxisprojektseminar | https://th-koeln.github.io/mi-bachelor-praxisprojektseminar/praxisprojekte.json |
 | Thesis Works | https://cnoss.github.io/thesis/works.json |
+| framebuffer.net (Florian Niebling) | https://www.framebuffer.net/studentprojects/vis.json |
 | **Kontakt** | |
 | Christian Noss | christian.noss@th-koeln.de |

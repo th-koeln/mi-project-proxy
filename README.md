@@ -18,6 +18,7 @@ Aktuell sind diese Quellen eingetragen:
 | `thesis-works` | cnoss.github.io/thesis | `ThesisWorksMapper` | `external` | Inhalt der Quelle |
 | `agentic-feeding` | th-koeln/mi-project-agentic-feeding: Lehrende pflegen Arbeiten mit ihrem KI-Agenten ein, die CI validiert und baut `index.json` | `ThesisSchemaMapper` | `internal` | `visibility: published` und grüne Validierung im Repo |
 | `praxisprojektseminar` | th-koeln/mi-bachelor-praxisprojektseminar | `ThesisSchemaMapper` | `external` | `mi-website: true` im Front Matter, dazu Teaserbild, Bildrechte und Name (siehe README des Repos) |
+| `framebuffer-niebling` | framebuffer.net/studentprojects (Prof. Dr. Florian Niebling) | `ThesisSchemaMapper` | `internal` | `visibility` im Feed |
 
 Die Quellen liefern ihre Daten teils in unterschiedlichen Formaten. Der Proxy sammelt alles ein und macht daraus **eine** einheitliche Liste, die die Website direkt anzeigen kann.
 
@@ -61,7 +62,7 @@ In Worten:
 Eine neue Quelle anbinden, z. B. die Website einer weiteren Lehrperson, heißt also nur:
 
 1. Eintrag in [config/sources.php](config/sources.php) (URL des JSON und Adapter).
-2. Liefert die Quelle das Schema aus [thesis-schema.json](thesis-schema.json), passt der vorhandene `ThesisSchemaMapper`. Hat sie eigene Detailseiten, gibt sie deren Adresse im optionalen Feld `detail_url` an. Sonst schreibt man einen neuen Adapter (siehe [Mapper schreiben](#mapper-schreiben)).
+2. Liefert die Quelle das Schema aus [thesis-schema.json](thesis-schema.json), passt der vorhandene `ThesisSchemaMapper`. Den Rahmen der Datei (`generated`, `schema`, `count`, `works`) beschreibt [feed-schema.json](feed-schema.json); es verweist für jede Arbeit auf `thesis-schema.json`, zum Validieren also beide Schemas laden. Der Mapper akzeptiert auch eine einfache Liste ohne Rahmen. Hat sie eigene Detailseiten, gibt sie deren Adresse im optionalen Feld `detail_url` an. Sonst schreibt man einen neuen Adapter (siehe [Mapper schreiben](#mapper-schreiben)).
 
 Der Proxy gleicht die Quellen nicht miteinander ab. Steht dieselbe Arbeit in zwei Quellen, wird das redaktionell in den Quellen bereinigt.
 
