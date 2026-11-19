@@ -104,7 +104,7 @@ Die Detailseite bleibt auf der Seminar-Website, die MI-Website verlinkt dorthin.
 | [mi-project-agentic-feeding](https://github.com/th-koeln/mi-project-agentic-feeding) | mit KI-Agenten eingepflegte Arbeiten | MI-Website | geprüfte Einträge mit `visibility: published` |
 | [Praxisprojektseminar](https://github.com/th-koeln/mi-bachelor-praxisprojektseminar) | Praxisprojekte aus dem Seminar | Seminar-Website | nur mit `mi-website: true`, Bild und Bildrechten |
 | [Thesis Works](https://cnoss.github.io/thesis/) | Arbeiten aus der Betreuung einer Lehrperson | Thesis Works | alle Einträge der Quelle |
-| [framebuffer.net](https://www.framebuffer.net/studentprojects/vis.json) | Arbeiten aus der Betreuung von Florian Niebling | MI-Website | Einträge mit `visibility: published` |
+| [framebuffer.net](https://framebuffer.net/studentprojects/vis.json) | Arbeiten aus der Betreuung von Florian Niebling | MI-Website | Einträge mit `visibility: published` |
 
 ## Doppelte Arbeiten
 
@@ -145,6 +145,6 @@ Der Proxy erkennt keine Dubletten. Steht eine Arbeit in zwei Quellen, muss sie i
 | mi-project-agentic-feeding | https://th-koeln.github.io/mi-project-agentic-feeding/index.json |
 | Praxisprojektseminar | https://th-koeln.github.io/mi-bachelor-praxisprojektseminar/praxisprojekte.json |
 | Thesis Works | https://cnoss.github.io/thesis/works.json |
-| framebuffer.net (Florian Niebling) | https://www.framebuffer.net/studentprojects/vis.json |
+| framebuffer.net (Florian Niebling) | https://framebuffer.net/studentprojects/vis.json |
 | **Kontakt** | |
 | Christian Noss | christian.noss@th-koeln.de |

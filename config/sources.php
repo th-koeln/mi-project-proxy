@@ -49,7 +49,7 @@ return [
             'detail' => 'auto',
         ],
         'framebuffer-niebling' => [
-            'url' => 'https://www.framebuffer.net/studentprojects/vis.json',
+            'url' => 'https://framebuffer.net/studentprojects/vis.json',
             'mapper' => ThesisSchemaMapper::class,
             'detail' => 'auto',
         ],
