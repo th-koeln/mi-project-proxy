@@ -130,4 +130,5 @@ Empfohlenes Normalformat pro Projekt:
 - `detailUrl` (string|null): URL einer HTML-Detailseite auf dem Source-Server (keine PDF o. Ä.); wird vom Proxy in `detail` überführt
 - `updatedAt` (string|null)
 - `source` (string)
+- `author` (string|null): alle Namen, mit Komma getrennt; `authors` (Liste mit `firstname`, `lastname`, `name`): dieselben Personen einzeln (nur `ThesisSchemaMapper`, aus dem optionalen Schema-Feld `authors` oder aus `firstname`/`lastname`)
 - optional `raw` (mixed/array)

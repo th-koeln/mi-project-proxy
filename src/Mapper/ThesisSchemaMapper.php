@@ -7,7 +7,7 @@ namespace Mi\ProjectProxy\Mapper;
 /**
  * Adapter für alle Quellen, die das native Abschlussarbeiten-Schema liefern
  * (siehe thesis-schema.json), z. B. das MI-Kirby oder agentic-feeding:
- * Objekte mit u. a. firstname/lastname (getrennt), first_supervisor,
+ * Objekte mit u. a. firstname/lastname (getrennt), optional authors, first_supervisor,
  * teaser_image_url, keywords (Array) und visibility.
  *
  * Der Mapper überführt das in dasselbe Normalformat wie der
@@ -67,7 +67,7 @@ final class ThesisSchemaMapper implements MapperInterface
             $date = $this->normalizeString($item['date'] ?? null);
             $firstExaminer = $this->normalizeString($item['first_supervisor'] ?? null);
             $secondExaminer = $this->normalizeString($item['second_supervisor'] ?? null);
-            $author = $this->buildAuthor($item);
+            $authors = $this->buildAuthors($item);
             $keywords = $this->normalizeKeywords($item['keywords'] ?? null);
 
             $thesisUrl = $this->toAbsoluteUrl($this->normalizeString($item['thesis_url'] ?? null));
@@ -84,7 +84,8 @@ final class ThesisSchemaMapper implements MapperInterface
                 'imageCopyright' => $this->normalizeString($item['teaser_image_copyright'] ?? null),
                 'updatedAt' => $this->toIsoDateTime($this->normalizeString($item['updated_at'] ?? null) ?? $date),
                 'source' => $this->sourceName,
-                'author' => $author,
+                'author' => $authors === [] ? null : implode(', ', array_column($authors, 'name')),
+                'authors' => $authors,
                 'firstname' => $this->normalizeString($item['firstname'] ?? null),
                 'lastname' => $this->normalizeString($item['lastname'] ?? null),
                 'status' => $this->normalizeString($item['status'] ?? null),
@@ -113,13 +114,36 @@ final class ThesisSchemaMapper implements MapperInterface
         return $projects;
     }
 
-    private function buildAuthor(array $item): ?string
+    /**
+     * Alle Autor*innen aus `authors`, sonst die eine Person aus firstname/lastname.
+     *
+     * @return list<array{firstname: ?string, lastname: ?string, name: string}>
+     */
+    private function buildAuthors(array $item): array
     {
-        $firstname = $this->normalizeString($item['firstname'] ?? null);
-        $lastname = $this->normalizeString($item['lastname'] ?? null);
+        $people = is_array($item['authors'] ?? null) ? $item['authors'] : [$item];
 
-        $name = trim(implode(' ', array_filter([$firstname, $lastname])));
-        return $name !== '' ? $name : null;
+        $authors = [];
+        foreach ($people as $person) {
+            if (!is_array($person)) {
+                continue;
+            }
+
+            $firstname = $this->normalizeString($person['firstname'] ?? null);
+            $lastname = $this->normalizeString($person['lastname'] ?? null);
+            $name = trim(implode(' ', array_filter([$firstname, $lastname])));
+            if ($name !== '') {
+                $authors[] = ['firstname' => $firstname, 'lastname' => $lastname, 'name' => $name];
+            }
+        }
+
+        // Ist authors unbrauchbar, wenigstens die erste Person aus firstname/lastname nehmen.
+        if ($authors === [] && isset($item['authors'])) {
+            unset($item['authors']);
+            return $this->buildAuthors($item);
+        }
+
+        return $authors;
     }
 
     /** @return list<string> */

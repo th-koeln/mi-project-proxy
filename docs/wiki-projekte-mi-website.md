@@ -106,6 +106,21 @@ Die Detailseite bleibt auf der Seminar-Website, die MI-Website verlinkt dorthin.
 | [Thesis Works](https://cnoss.github.io/thesis/) | Arbeiten aus der Betreuung einer Lehrperson | Thesis Works | alle Einträge der Quelle |
 | [framebuffer.net](https://framebuffer.net/studentprojects/vis.json) | Arbeiten aus der Betreuung von Florian Niebling | MI-Website | Einträge mit `visibility: published` |
 
+## Arbeiten mit mehreren Autor*innen
+
+Bei Guided Projects oder Arbeiten zu zweit kommen alle Personen in das Feld `authors`, in der gewünschten Reihenfolge. Die erste Person steht zusätzlich wie gewohnt in `firstname` und `lastname`:
+
+```json
+"firstname": "Dennis",
+"lastname": "Neumann",
+"authors": [
+  { "firstname": "Dennis", "lastname": "Neumann" },
+  { "firstname": "Richard", "lastname": "Reh" }
+]
+```
+
+Die MI-Website zeigt dann alle Namen an.
+
 ## Doppelte Arbeiten
 
 Der Proxy erkennt keine Dubletten. Steht eine Arbeit in zwei Quellen, muss sie in einer davon herausgenommen werden:
